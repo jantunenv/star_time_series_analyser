@@ -53,7 +53,7 @@ class TestTsanalyser:
 		frequency = analyser.get_dominant_frequency()
 		assert abs(frequency - freq) <= 0.05*freq
 
-	@pytest.mark.parametrize('freq', np.random.random(size=2)*100.0)
+	@pytest.mark.parametrize('freq', np.random.random(size=10)*100.0)
 	def test_sinfit_values(self, freq):
 		spacing = 0.001
 		x = np.arange(0.0, 10.0, spacing)
@@ -66,3 +66,16 @@ class TestTsanalyser:
 		print(analyser.sinfit_params)
 		print([1.0, 2*np.pi*freq*0.98, 0.0, 0.0])
 		assert abs(frequency - freq) <= 0.01*freq
+		
+	@pytest.mark.parametrize('freq', np.random.random(size=2)*100.0)
+	def test_bruteforce_sinfit_values(self, freq):
+		spacing = 0.001
+		x = np.arange(0.0, 10.0, spacing)
+		y = np.sin(x*2*np.pi*freq)
+
+		analyser = tsanalyser.Tsanalyser()
+		#A, w, p ,c
+		analyser.sinfit_bruteforce(x, y, [1.0, 2*np.pi*freq, 0.0, 0.0])
+		frequency = analyser.get_sinfit_f()
+		assert abs(frequency - freq) <= 0.01*freq
+		
