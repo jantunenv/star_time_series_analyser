@@ -8,3 +8,4 @@ gfortran
 
 For fortran fitter routines used in python
 python3 -m numpy.f2py -c fitter_routines.f95 -m fitter_routines
+python3 -m numpy.f2py -c fitter_routines.f95 -m fitter_routines --f90flags="-fopenmp" -lgomp
