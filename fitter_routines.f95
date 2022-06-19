@@ -13,16 +13,16 @@ contains
 		real(8) :: r(n), best_r, r_tot, a0, w0, p0, c0
 		real(8) :: atest, wtest, ptest, ctest, final_best_r, besta, bestw, bestp, bestc
 
+
+		final_best_r = 999999999.9
 		a0 = a - atol
 		w0 = w - wtol
 		p0 = p - ptol
 		c0 = c - ctol
 
+		!$OMP PARALLEL SHARED(final_best_r, a,w,p,c,a0,w0,p0,c0,atol,wtol,ptol,ctol), &
+		!$OMP& PRIVATE(besta, bestw, bestp, bestc, atest, wtest, ptest, ctest, best_r, r, r_tot)
 		best_r = 9999999999.0
-		final_best_r = 999999999.9
-
-		!$OMP PARALLEL SHARED(final_best_r, a,w,p,c), &
-		!$OMP& PRIVATE(i, j, k, l, besta, bestw, bestp, bestc, atest, wtest, ptest, ctest, best_r, r, r_tot)
 		!$OMP DO
 		do i=1,an
 			atest = a0 + i*(2*atol/an)
@@ -58,6 +58,7 @@ contains
 		end if
 		!$OMP END CRITICAL
 		!$OMP END PARALLEL
+
 
 	end subroutine sin_fit_brute_force_omp
 
@@ -105,6 +106,5 @@ contains
 		end do
 
 	end subroutine sin_fit_brute_force
-
 
 end module fitter_routines

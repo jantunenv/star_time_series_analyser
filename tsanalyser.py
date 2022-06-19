@@ -30,12 +30,14 @@ class Tsanalyser:
 	def sinfit_function(self, t, A, w, p, c): return A*np.sin(w*t + p) + c
 
 	def sinfit_bruteforce(self, x, y, guess = np.asarray([0.0, 0.0, 0.0, 0.0], dtype=np.float64), tol = np.asarray([1.0, 1.0, 1.0, 1.0], dtype=np.float64), n_vals = [20,20,20,20], omp = False):
-		a, w, p, c = guess
+		# guess needs to be and array of 1 element numpy arrays with dtype = numpy.float64, otherwise the values are not going to change inside the sin_fit_brute_force routines
 		if(omp):
-			fitter_routines.fitter_routines.sin_fit_brute_force_omp(x, y, len(x), a, w, p, c, tol[0], tol[1], tol[2], n_vals[0], n_vals[1], n_vals[2], n_vals[3])
-		else:	
-			fitter_routines.fitter_routines.sin_fit_brute_force(x, y, len(x), a, w, p, c, tol[0], tol[1], tol[2], n_vals[0], n_vals[1], n_vals[2], n_vals[3])
-		self.sinfit_params = [a, w, p, c]
+			fitter_routines.fitter_routines.sin_fit_brute_force_omp(x, y, guess[0], guess[1], guess[2], guess[3], tol[0], tol[1], tol[2], tol[3], n_vals[0], n_vals[1], n_vals[2], n_vals[3])
+		else:
+			fitter_routines.fitter_routines.sin_fit_brute_force(x, y, guess[0], guess[1], guess[2], guess[3], tol[0], tol[1], tol[2], tol[3], n_vals[0], n_vals[1], n_vals[2], n_vals[3])
+		print(guess)
+
+		self.sinfit_params = guess
 
 	def sinfit(self, x,y, guess = [0.0, 0.0, 0.0, 0.0]):
 		params, cov = scipy.optimize.curve_fit(self.sinfit_function, x, y, p0 = guess)
